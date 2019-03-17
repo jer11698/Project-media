@@ -1,10 +1,26 @@
+var _isFire = 0;
+
 function gameStart() {
   drawEntity();
   gameArea.start();
 }
 
 function drawEntity() {
+  var width = 50;
+  this.enemyObject1 = [];
+  this.enemyObject2 = [];
+  this.enemyObject3 = [];
+  this.enemyObject4 = [];
+  this.enemyObject5 = [];
   playerObject = new component(30, 10, "yellow", 185, 240);
+  for (var i = 0; i <= 17; i++) {
+    width += 15;
+    enemyObject1[i] = new component(10, 10, "red", width, 20);
+    enemyObject2[i] = new component(10, 10, "#80ff00", width, 40);
+    enemyObject3[i] = new component(10, 10, "#00ffff", width, 60);
+    enemyObject4[i] = new component(10, 10, "#7f00ff", width, 80);
+    enemyObject5[i] = new component(10, 10, "#ff3c00", width, 100);
+  }
 }
 
 var gameArea = {
@@ -51,17 +67,27 @@ var movePlayer = {
   moveRight: function () { playerObject.move = 2 },
   stopMove: function () { playerObject.move = 0 },
   fire: function () {
-    this.announce = 'fire!';
-    ammo = new component(1, 6, "white", 200, 230);
+    announce();
+    ammo = new component(1, 6, "white", playerObject.x + 15, 230);
   }
 }
 
+function announce() {
+  this._announce = 'fire!';
+}
 
 function updateGameArea() {
   gameArea.clear();
+  for (var i = 0; i <= 17; i++) {
+    enemyObject1[i].update();
+    enemyObject2[i].update();
+    enemyObject3[i].update();
+    enemyObject4[i].update();
+    enemyObject5[i].update();
+  }
   playerObject.playerMove();
   playerObject.update();
-  if (movePlayer.fire.announce == 'fire!') {
+  if (this._announce == 'fire!') {
     ammo.letFire();
     ammo.update();
   }
@@ -69,7 +95,10 @@ function updateGameArea() {
 
 document.addEventListener('keydown', function () {
   var key = event.code;
-  if (key == 'Space') {
+  if (key == 'Space' && _isFire == 0)  {
+    _isFire += 1;
+    movePlayer.fire();
+  } else if (key == 'Space' && ammo.y <= 0) {
     movePlayer.fire();
   } else if (key == 'ArrowLeft') {
     movePlayer.moveLeft();

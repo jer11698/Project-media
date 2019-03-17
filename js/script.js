@@ -1,6 +1,6 @@
-var playerObject; // กำหนดตัวผู้เล่น
+var _isFire = 0;
 
-function startGame() {
+function gameStart() {
   drawEntity();
   gameArea.start();
 }
@@ -12,35 +12,17 @@ function drawEntity() {
   this.enemyObject3 = [];
   this.enemyObject4 = [];
   this.enemyObject5 = [];
-  //playerObject = new component(30, 10, "image/player.png", 185, 240, "image");
-  playerObject = player()
+  playerObject = new component(30, 10, "yellow", 185, 240);
   for (var i = 0; i <= 17; i++) {
     width += 15;
-    enemyObject1[i] = new component(10, 10, "red", width, 20, "draw");
-    enemyObject2[i] = new component(10, 10, "#80ff00", width, 40, "draw");
-    enemyObject3[i] = new component(10, 10, "#00ffff", width, 60, "draw");
-    enemyObject4[i] = new component(10, 10, "#7f00ff", width, 80, "draw");
-    enemyObject5[i] = new component(10, 10, "#ff3c00", width, 100, "draw");
-  ammo = new component(1, 6, "white", 200, 240, "draw");
+    enemyObject1[i] = new component(10, 10, "red", width, 20);
+    enemyObject2[i] = new component(10, 10, "#80ff00", width, 40);
+    enemyObject3[i] = new component(10, 10, "#00ffff", width, 60);
+    enemyObject4[i] = new component(10, 10, "#7f00ff", width, 80);
+    enemyObject5[i] = new component(10, 10, "#ff3c00", width, 100);
   }
 }
 
-function player(){
-  return new component(30, 10, "image/player.png", 185, 240, "image");
-}
-
-player.prototype.fire = function() {
-  return new component(1, 6, "white", this.width, 240, "draw");
-}
-
-var movePlayer =  {
-  moveLeft: function(){playerObject.move = -2},
-  moveRight: function(){playerObject.move = 2},
-  stopMove: function(){playerObject.move = 0},
-  fire: function(){}
-}
-
-//พื้นที่เริ่ม
 var gameArea = {
   canvas: document.createElement("canvas"),
   start: function () {
@@ -55,34 +37,43 @@ var gameArea = {
   clear: function () {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
   },
-  stop: function () {
-    clearInterval(this.interval);
-  }
 }
 
-function component(width, height, color, x, y, type) {
-  this.type = type;
-  if (type == "image") {
-    this.image = new Image();
-    this.image.src = color;
-  }
+function component(width, height, color, x, y) {
   this.width = width;
   this.height = height;
   this.move = 0;
   this.x = x;
   this.y = y;
+  this.speed = 5;
   this.update = function () {
     ctx = gameArea.context;
-    if (type == "image") {
-      ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-    } else {
-      ctx.fillStyle = color;
-      ctx.fillRect(this.x, this.y, this.width, this.height);
-    }
+    ctx.fillStyle = color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+  }
+  this.letFire = function () {
+    this.y -= this.speed;
+  }
+  this.stopFire = function () {
+    this.y -= 0;
   }
   this.playerMove = function () {
     this.x += this.move;
   }
+}
+
+var movePlayer = {
+  moveLeft: function () { playerObject.move = -2 },
+  moveRight: function () { playerObject.move = 2 },
+  stopMove: function () { playerObject.move = 0 },
+  fire: function () {
+    announce();
+    ammo = new component(1, 6, "white", playerObject.x + 15, 230);
+  }
+}
+
+function announce() {
+  this._announce = 'fire!';
 }
 
 function updateGameArea() {
@@ -94,26 +85,22 @@ function updateGameArea() {
     enemyObject4[i].update();
     enemyObject5[i].update();
   }
-  ammo.update();
   playerObject.playerMove();
   playerObject.update();
+  if (this._announce == 'fire!') {
+    ammo.letFire();
+    ammo.update();
+  }
 }
-
-/*function moveLeft() {
-  playerObject.move = -2;
-}
-
-function moveRight() {
-  playerObject.move = 2;
-}
-
-function stopMove() {
-  playerObject.move = 0;
-}*/
 
 document.addEventListener('keydown', function () {
   var key = event.code;
-  if (key == 'ArrowLeft') {
+  if (key == 'Space' && _isFire == 0)  {
+    _isFire += 1;
+    movePlayer.fire();
+  } else if (key == 'Space' && ammo.y <= 0) {
+    movePlayer.fire();
+  } else if (key == 'ArrowLeft') {
     movePlayer.moveLeft();
     //moveLeft();
   } else if (key == 'ArrowRight') {
@@ -133,6 +120,3 @@ document.addEventListener('keyup', function () {
     movePlayer.stopMove();
   }
 });
-
-
-
