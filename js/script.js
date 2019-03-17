@@ -23,11 +23,11 @@ function drawEntity() {
     enemyObject5[i] = new component(10, 10, "#ff3c00", width, 100);
   }*/
   playerObject = new component(30, 10, 39, 19, "image/player.png", 185, 240, 0, 0, "image");
-  enemyObject = [[new component(17, 15, 26, 20, "image/enemy0.png", 50, 20, 0, 0, "image")],
-  [new component(17, 15, 26, 20, "image/enemy0.png", 65, 40, 0, 0, "draw")],
-  [new component(17, 15, 26, 20, "image/enemy1.png", 80, 60, 0, 0, "draw")],
-  [new component(17, 15, 26, 20, "image/enemy2.png", 95, 80, 0, 0, "draw")],
-  [new component(17, 15, 26, 20, "image/enemy3.png", 110, 100, 0, 0, "draw")]];
+  enemyObject = [[new component(17, 15, 25, 19, "image/enemy0.png", 50, 20, 0, 0, "image"), new component(17, 15, 26, 19, "image/enemy0.png", 50, 20, 25, 0, "image")],
+  [new component(17, 15, 25, 19, "image/enemy0.png", 65, 40, 0, 0, "draw"), new component(17, 15, 26, 19, "image/enemy0.png", 65, 40, 25, 0, "draw")],
+  [new component(17, 15, 25, 19, "image/enemy1.png", 80, 60, 0, 0, "draw"), new component(17, 15, 26, 19, "image/enemy1.png", 80, 60, 25, 0, "draw")],
+  [new component(17, 15, 25, 19, "image/enemy2.png", 95, 80, 0, 0, "draw"), new component(17, 15, 26, 19, "image/enemy2.png", 95, 80, 25, 0, "draw")],
+  [new component(17, 15, 25, 19, "image/enemy3.png", 110, 100, 0, 0, "draw"), new component(17, 15, 26, 19, "image/enemy3.png", 110, 100, 25, 0, "draw")]];
 }
 
 var movePlayer = {
@@ -36,7 +36,7 @@ var movePlayer = {
   stopMove: function () { playerObject.move = 0 },
   fire: function () {
     announce();
-    ammo = new component(1, 6, 1, 6, "white", playerObject.x + 15, 230, 0, 0, "draw");
+    ammo = new component(1, 6, 1, 6, "white", playerObject.x + 15, 230, 0, 0, );
   }
 }
 
