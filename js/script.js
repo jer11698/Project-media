@@ -22,12 +22,12 @@ function drawEntity() {
     enemyObject4[i] = new component(10, 10, "#7f00ff", width, 80);
     enemyObject5[i] = new component(10, 10, "#ff3c00", width, 100);
   }*/
-  playerObject = new component(30, 10, "image/player.png", 185, 240, "image");
-  enemyObject = [[new component(10, 10, "image/enemy0.png", 50, 20, "image")],
-  [new component(10, 10, "#80ff00", 65, 40, "draw")],
-  [new component(10, 10, "#00ffff", 80, 60, "draw")],
-  [new component(10, 10, "#7f00ff", 95, 80, "draw")],
-  [new component(10, 10, "#ff3c00", 110, 100, "draw")]];
+  playerObject = new component(30, 10, 39, 19, "image/player.png", 185, 240, 0, 0, "image");
+  enemyObject = [[new component(17, 15, 26, 20, "image/enemy0.png", 50, 20, 0, 0, "image")],
+  [new component(17, 15, 26, 20, "image/enemy0.png", 65, 40, 0, 0, "draw")],
+  [new component(17, 15, 26, 20, "image/enemy1.png", 80, 60, 0, 0, "draw")],
+  [new component(17, 15, 26, 20, "image/enemy2.png", 95, 80, 0, 0, "draw")],
+  [new component(17, 15, 26, 20, "image/enemy3.png", 110, 100, 0, 0, "draw")]];
 }
 
 var movePlayer = {
@@ -36,10 +36,9 @@ var movePlayer = {
   stopMove: function () { playerObject.move = 0 },
   fire: function () {
     announce();
-    ammo = new component(1, 6, "white", playerObject.x + 15, 230);
+    ammo = new component(1, 6, 1, 6, "white", playerObject.x + 15, 230, 0, 0, "draw");
   }
 }
-
 
 var gameArea = {
   canvas: document.createElement("canvas"),
@@ -54,15 +53,19 @@ var gameArea = {
   },
   clear: function () {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  },
+  }
 }
 
-function component(width, height, color, x, y, type) {
+function component(width, height, swidth, sheight, color, x, y, sx, sy, type) {
   this.type = type;
   if (type == "image") {
     this.image = new Image();
     this.image.src = color;
   }
+  this.swidth = swidth;
+  this.sheight = sheight;
+  this.sx = sx;
+  this.sy = sy;
   this.width = width;
   this.height = height;
   this.move = 0;
@@ -72,7 +75,7 @@ function component(width, height, color, x, y, type) {
   this.update = function () {
     ctx = gameArea.context;
     if (type == "image") {
-      ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+      ctx.drawImage(this.image, this.sx, this.sy, this.swidth, this.sheight, this.x, this.y, this.width, this.height);
     } else {
       ctx.fillStyle = color;
       ctx.fillRect(this.x, this.y, this.width, this.height);
