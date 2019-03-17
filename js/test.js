@@ -23,6 +23,8 @@ function drawEntity() {
   }
 }
 
+
+
 var gameArea = {
   canvas: document.createElement("canvas"),
   start: function () {
@@ -73,7 +75,7 @@ var movePlayer = {
 }
 
 function announce() {
-  this._announce = 'fire!';
+  this.announceFire = 'fire!';
 }
 
 function updateGameArea() {
@@ -87,7 +89,7 @@ function updateGameArea() {
   }
   playerObject.playerMove();
   playerObject.update();
-  if (this._announce == 'fire!') {
+  if (this.announceFire == 'fire!') {
     ammo.letFire();
     ammo.update();
   }

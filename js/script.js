@@ -1,4 +1,5 @@
 var _isFire = 0;
+//var dataEnemy, dataPlayer;
 
 function gameStart() {
   drawEntity();
@@ -6,7 +7,7 @@ function gameStart() {
 }
 
 function drawEntity() {
-  var width = 50;
+  /*var width = 50;
   this.enemyObject1 = [];
   this.enemyObject2 = [];
   this.enemyObject3 = [];
@@ -20,8 +21,25 @@ function drawEntity() {
     enemyObject3[i] = new component(10, 10, "#00ffff", width, 60);
     enemyObject4[i] = new component(10, 10, "#7f00ff", width, 80);
     enemyObject5[i] = new component(10, 10, "#ff3c00", width, 100);
+  }*/
+  playerObject = new component(30, 10, "image/player.png", 185, 240, "image");
+  enemyObject = [[new component(10, 10, "image/enemy0.png", 50, 20, "image")],
+  [new component(10, 10, "#80ff00", 65, 40, "draw")],
+  [new component(10, 10, "#00ffff", 80, 60, "draw")],
+  [new component(10, 10, "#7f00ff", 95, 80, "draw")],
+  [new component(10, 10, "#ff3c00", 110, 100, "draw")]];
+}
+
+var movePlayer = {
+  moveLeft: function () { playerObject.move = -2 },
+  moveRight: function () { playerObject.move = 2 },
+  stopMove: function () { playerObject.move = 0 },
+  fire: function () {
+    announce();
+    ammo = new component(1, 6, "white", playerObject.x + 15, 230);
   }
 }
+
 
 var gameArea = {
   canvas: document.createElement("canvas"),
@@ -39,7 +57,12 @@ var gameArea = {
   },
 }
 
-function component(width, height, color, x, y) {
+function component(width, height, color, x, y, type) {
+  this.type = type;
+  if (type == "image") {
+    this.image = new Image();
+    this.image.src = color;
+  }
   this.width = width;
   this.height = height;
   this.move = 0;
@@ -48,8 +71,12 @@ function component(width, height, color, x, y) {
   this.speed = 5;
   this.update = function () {
     ctx = gameArea.context;
-    ctx.fillStyle = color;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    if (type == "image") {
+      ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    } else {
+      ctx.fillStyle = color;
+      ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
   }
   this.letFire = function () {
     this.y -= this.speed;
@@ -62,29 +89,20 @@ function component(width, height, color, x, y) {
   }
 }
 
-var movePlayer = {
-  moveLeft: function () { playerObject.move = -2 },
-  moveRight: function () { playerObject.move = 2 },
-  stopMove: function () { playerObject.move = 0 },
-  fire: function () {
-    announce();
-    ammo = new component(1, 6, "white", playerObject.x + 15, 230);
-  }
-}
-
 function announce() {
   this._announce = 'fire!';
 }
 
 function updateGameArea() {
   gameArea.clear();
-  for (var i = 0; i <= 17; i++) {
+  /*for (var i = 0; i <= 17; i++) {
     enemyObject1[i].update();
     enemyObject2[i].update();
     enemyObject3[i].update();
     enemyObject4[i].update();
     enemyObject5[i].update();
-  }
+  }*/
+  enemyObject[0][0].update();
   playerObject.playerMove();
   playerObject.update();
   if (this._announce == 'fire!') {
@@ -95,16 +113,14 @@ function updateGameArea() {
 
 document.addEventListener('keydown', function () {
   var key = event.code;
-  if (key == 'Space' && _isFire == 0)  {
+  if (key == 'Space' && _isFire == 0) {
     _isFire += 1;
     movePlayer.fire();
   } else if (key == 'Space' && ammo.y <= 0) {
     movePlayer.fire();
   } else if (key == 'ArrowLeft') {
     movePlayer.moveLeft();
-    //moveLeft();
   } else if (key == 'ArrowRight') {
-    //moveRight();
     movePlayer.moveRight();
   }
 });
@@ -112,11 +128,9 @@ document.addEventListener('keydown', function () {
 document.addEventListener('keyup', function () {
   var key = event.code;
   if (key == 'ArrowLeft') {
-    //stopMove();
     movePlayer.stopMove();
   }
   else if (key == 'ArrowRight') {
-    //stopMove();
     movePlayer.stopMove();
   }
 });
